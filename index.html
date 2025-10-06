@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Not Defteri</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Değişkenleri (Temalar için) --- */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #1c1e21;
+            --text-secondary: #606770;
+            --primary-color: #007bff;
+            --border-color: #dddfe2;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #18191a;
+            --card-bg: #242526;
+            --text-color: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --primary-color: #4dabf7;
+            --border-color: #3e4042;
+            --success-color: #51cf66;
+            --danger-color: #ff6b6b;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- Genel Stiller --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* --- Tema Değiştirme Butonu --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "🌞";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "🌙";
+        }
+
+        /* --- Kartlar ve Form Elemanları --- */
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input[type="url"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .helper-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* --- Radio Buton Grubu --- */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        /* --- Butonlar --- */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            filter: brightness(110%);
+        }
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        .btn-danger:hover {
+            filter: brightness(110%);
+        }
+
+        /* --- İstatistikler --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* --- İşlem Geçmişi --- */
+        .trade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .trade-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .trade-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        .trade-item a {
+            width: 120px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        .trade-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+        .trade-item a:hover img {
+            transform: scale(1.05);
+        }
+        .trade-details {
+            flex-grow: 1;
+        }
+        .trade-result {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .trade-result.win { color: var(--success-color); }
+        .trade-result.loss { color: var(--danger-color); }
+        .trade-notes {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .trade-actions {
+            flex-shrink: 0;
+        }
+        
+        /* --- Hakkımda ve İletişim Bölümleri --- */
+        .about-contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .contact-item span {
+            font-size: 1.2rem;
+        }
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contact-item a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* --- Responsive Tasarım --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header-left {
+                width: 100%;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            nav {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+            nav a {
+                margin: 0 10px;
+            }
+            .trade-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .trade-item a {
+                width: 100%;
+                height: auto;
+            }
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>📈 Trading Not Defteri</h1>
+            </div>
+            <nav>
+                <a href="#hakkimda">Hakkımda</a>
+                <a href="#iletisim">İletişim</a>
+            </nav>
+            <div class="theme-switch-wrapper">
+                <span>Tema</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </header>
+
+        <main>
+            <section class="card" id="input-form">
+                <h2>Yeni İşlem Kaydet</h2>
+                <form id="trade-form">
+                    <div class="form-group">
+                        <label for="chartUrl">TradingView Grafik Linki</label>
+                        <input type="url" id="chartUrl" placeholder="https://www.tradingview.com/x/..." required>
+                        <p class="helper-text">TradingView'de grafik kamerası (📷) ikonuna tıklayarak aldığınız resim linkini yapıştırın.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>İşlem Sonucu</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="result" value="win" required>
+                                <span>✅ Kar (Win)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="result" value="loss" required>
+                                <span>❌ Zarar (Loss)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notlar (Opsiyonel)</label>
+                        <textarea id="notes" rows="3" placeholder="Örn: Destek noktasından alış yapıldı..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">İşlemi Kaydet</button>
+                </form>
+            </section>
+
+            <section class="card" id="statistics">
+                <h2>İstatistikler</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value" id="winRate">0%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTrades">0</div>
+                        <div class="stat-label">Toplam İşlem</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalWins">0</div>
+                        <div class="stat-label">Kazanılan</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalLosses">0</div>
+                        <div class="stat-label">Kaybedilen</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card" id="history">
+                <h2>İşlem Geçmişi</h2>
+                <div id="trade-list" class="trade-list">
+                    <!-- İşlemler JavaScript ile buraya eklenecek -->
+                </div>
+            </section>
+
+            <section class="card" id="hakkimda">
+                <h2>Hakkımda</h2>
+                <p>
+                    Merhaba, ben Uğur. Finansal piyasalardaki yolculuğumda edindiğim tecrübeleri ve stratejileri kaydetmek, analiz etmek ve geliştirmek amacıyla bu kişisel trading not defterini oluşturdum. Burada paylaştığım grafikler ve notlar, kendi eğitim sürecimin bir parçasıdır ve yatırım tavsiyesi niteliği taşımaz. Disiplinli ve sürekli öğrenen bir trader olma hedefim doğrultusunda ilerliyorum.
+                </p>
+            </section>
+
+            <section class="card" id="iletisim">
+                <h2>İletişim</h2>
+                <p>Trading hakkında fikir alışverişi yapmak veya sorularınız için benimle iletişime geçebilirsiniz.</p>
+                <div class="contact-item">
+                    <span>✈️</span>
+                    <a href="https://t.me/seyyarcigercitibi" target="_blank" rel="noopener noreferrer">Telegram: @seyyarcigercitibi</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+            
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                if (currentTheme === 'dark') {
+                    themeToggle.checked = true;
+                }
+            }
+
+            themeToggle.addEventListener('change', () => {
+                const theme = themeToggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+
+            const tradeForm = document.getElementById('trade-form');
+            const tradeList = document.getElementById('trade-list');
+            
+            let trades = JSON.parse(localStorage.getItem('trades')) || [];
+
+            const updateStats = () => {
+                const totalTrades = trades.length;
+                const totalWins = trades.filter(trade => trade.result === 'win').length;
+                const totalLosses = totalTrades - totalWins;
+                const winRate = totalTrades > 0 ? ((totalWins / totalTrades) * 100).toFixed(2) : 0;
+
+                document.getElementById('winRate').textContent = `${winRate}%`;
+                document.getElementById('totalTrades').textContent = totalTrades;
+                document.getElementById('totalWins').textContent = totalWins;
+                document.getElementById('totalLosses').textContent = totalLosses;
+            };
+
+            const renderTrades = () => {
+                tradeList.innerHTML = '';
+                if (trades.length === 0) {
+                    tradeList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Henüz kayıtlı bir işlem yok.</p>';
+                    return;
+                }
+                trades.reverse().forEach(trade => {
+                    const tradeItem = document.createElement('div');
+                    tradeItem.classList.add('trade-item');
+                    tradeItem.innerHTML = `
+                        <a href="${trade.chartUrl}" target="_blank">
+                            <img src="${trade.chartUrl}" alt="TradingView Grafik">
+                        </a>
+                        <div class="trade-details">
+                            <div class="trade-result ${trade.result}">${trade.result === 'win' ? 'Kazançlı İşlem' : 'Zararlı İşlem'}</div>
+                            <div class="trade-notes">${trade.notes || 'Not eklenmemiş.'}</div>
+                        </div>
+                        <div class="trade-actions">
+                            <button class="btn btn-danger" data-id="${trade.id}">Sil</button>
+                        </div>
+                    `;
+                    tradeList.appendChild(tradeItem);
+                });
+                 trades.reverse(); // Listeyi eski haline getirmek için
+            };
+
+            tradeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const chartUrl = document.getElementById('chartUrl').value;
+                const result = document.querySelector('input[name="result"]:checked').value;
+                const notes = document.getElementById('notes').value;
+
+                const newTrade = {
+                    id: Date.now(),
+                    chartUrl,
+                    result,
+                    notes,
+                    timestamp: new Date().toISOString()
+                };
+
+                trades.push(newTrade);
+                localStorage.setItem('trades', JSON.stringify(trades));
+                
+                updateStats();
+                renderTrades();
+                tradeForm.reset();
+            });
+
+            tradeList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-danger')) {
+                    const tradeId = parseInt(e.target.getAttribute('data-id'), 10);
+                    trades = trades.filter(trade => trade.id !== tradeId);
+                    localStorage.setItem('trades', JSON.stringify(trades));
+                    updateStats();
+                    renderTrades();
+                }
+            });
+
+            // Initial load
+            updateStats();
+            renderTrades();
+        });
+    </script>
+</body>
+</html>
